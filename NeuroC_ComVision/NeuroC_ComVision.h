@@ -4,19 +4,27 @@
 // das diese DLL verwendet. Alle anderen Projekte, deren Quelldateien diese Datei beinhalten, sehen
 // NEUROCCOMVISION_API-Funktionen als aus einer DLL importiert an, während diese DLL
 // mit diesem Makro definierte Symbole als exportiert ansieht.
-#ifdef NEUROCCOMVISION_EXPORTS
-#define NEUROCCOMVISION_API __declspec(dllexport)
+
+#pragma once
+
+#ifdef NEUROC_COMVISION_EXPORTS
+#define NEUROC_API __declspec(dllexport)
 #else
-#define NEUROCCOMVISION_API __declspec(dllimport)
+#define NEUROC_API __declspec(dllimport)
 #endif
 
-// Diese Klasse wird aus der DLL exportiert.
-class NEUROCCOMVISION_API CNeuroCComVision {
-public:
-	CNeuroCComVision(void);
-	// TODO: Methoden hier hinzufügen.
-};
+extern "C"
+{
+    struct DetectionResult
+    {
+        int x;
+        int y;
+        int width;
+        int height;
+        bool detected;
+    };
 
-extern NEUROCCOMVISION_API int nNeuroCComVision;
-
-NEUROCCOMVISION_API int fnNeuroCComVision(void);
+    NEUROC_API bool StartCamera();
+    NEUROC_API bool GetFrame(DetectionResult* result);
+    NEUROC_API void StopCamera();
+}
