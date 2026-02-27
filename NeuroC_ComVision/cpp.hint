@@ -1,0 +1,2 @@
+#define NEUROCCOMVISION_API __declspec(dllexport)
+#define NEUROCCOMVISION_API __declspec(dllimport)
