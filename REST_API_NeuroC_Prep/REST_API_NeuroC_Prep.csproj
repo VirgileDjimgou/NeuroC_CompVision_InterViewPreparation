@@ -10,4 +10,16 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Native C++ DLL aus dem Build-Ordner kopieren -->
+    <None Include="..\x64\Debug\NeuroCComVision.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>NeuroCComVision.dll</Link>
+    </None>
+    <!-- Haar-Cascade für Gesichtserkennung -->
+    <None Include="..\x64\Debug\haarcascade_frontalface_default.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
