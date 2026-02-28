@@ -39,37 +39,57 @@ In short:
 > A focused technical rehearsal --- nothing more, nothing less.
 
 
-\## Architecture Used
+\## Architecture
 
 ```mermaid
 graph TD
-    Camera[Laptop Kamera] --> CaptureThread
-    CaptureThread --> ProcessingThread
-    ProcessingThread --> OpenCV
-    ProcessingThread --> CInterface
-    CInterface --> WPFClient
-    CInterface --> WebAPI
-    WebAPI --> OPCUA
+    CAM["📷 Laptop Camera"]
+
+    subgraph DLL ["NeuroC_ComVision · C++ DLL"]
+        direction TB
+        CAPTURE["Capture Thread<br/><i>std::thread · std::mutex</i>"]
+        OPENCV["OpenCV 4.x Engine"]
+        DETECT["Detection Modes<br/>Color · Face · Edge · Circle"]
+        CAPI["C Export Interface<br/><code>StartCamera · GetFrame<br/>DetectFaces · DetectEdges</code>"]
+        CAPTURE --> OPENCV --> DETECT --> CAPI
+    end
+
+    subgraph WPF ["VisionClientWPF · C# WPF"]
+        direction TB
+        INTEROP_WPF["P/Invoke<br/><i>VisionInterop.cs</i>"]
+        UI["Live UI<br/>Video · Overlay · Controls"]
+        INTEROP_WPF --> UI
+    end
+
+    subgraph API ["REST API · ASP.NET Core 8"]
+        direction TB
+        INTEROP_API["P/Invoke<br/><i>NativeInterop.cs</i>"]
+        SVC["VisionService<br/><i>Singleton</i>"]
+        CTRL["REST Controllers<br/><code>/api/camera<br/>/api/detection<br/>/api/frame</code>"]
+        SWAGGER["Swagger UI"]
+        INTEROP_API --> SVC --> CTRL
+        CTRL -.- SWAGGER
+    end
+
+    CAM --> CAPTURE
+    CAPI -- "P/Invoke" --> INTEROP_WPF
+    CAPI -- "P/Invoke" --> INTEROP_API
+
+    style CAM fill:#4a90d9,stroke:#2c5f8a,color:#fff
+    style DLL fill:#2d2d3d,stroke:#6c5ce7,color:#fff
+    style WPF fill:#2d3d2d,stroke:#27ae60,color:#fff
+    style API fill:#3d2d2d,stroke:#e74c3c,color:#fff
+    style CAPTURE fill:#3a3a5a,stroke:#a29bfe,color:#fff
+    style OPENCV fill:#3a3a5a,stroke:#a29bfe,color:#fff
+    style DETECT fill:#3a3a5a,stroke:#a29bfe,color:#fff
+    style CAPI fill:#4a3a6a,stroke:#d4a5ff,color:#fff
+    style INTEROP_WPF fill:#3a5a3a,stroke:#6fcf97,color:#fff
+    style UI fill:#3a5a3a,stroke:#6fcf97,color:#fff
+    style INTEROP_API fill:#5a3a3a,stroke:#ff7675,color:#fff
+    style SVC fill:#5a3a3a,stroke:#ff7675,color:#fff
+    style CTRL fill:#5a3a3a,stroke:#ff7675,color:#fff
+    style SWAGGER fill:#5a4a3a,stroke:#fdcb6e,color:#fff
 ```
-
-
-Laptop Camera\\
-
-↓\\
-
-C++ OpenCV Processing Engine (DLL)\\
-
-↓\\
-
-C-compatible Export Interface\\
-
-↓\\
-
-C# WPF Client via P/Invoke\\
-
-↓\\
-
-Simple UI displaying object position
 
 
 
