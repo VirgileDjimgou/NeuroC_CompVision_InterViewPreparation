@@ -2,15 +2,15 @@
 
 
 
-\## Brainstorming Playground -- Interview Preparation Edition 😄
+\## Brainstorming Playground - Interview Preparation Edition 😄
 
 
 
-This project is \*\*not\*\* a revolutionary industrial vision framework. It
+This project is NOT a revolutionary industrial vision framework. It
 
 is simply a technical brainstorming playground I built while preparing
 
-for a job interview at \*\*NeuroCheck\*\*.
+for a job interview at NeuroCheck.
 
 
 
