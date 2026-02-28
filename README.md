@@ -1,37 +1,19 @@
 \# NeuroC\_ComVision
 
-
-
 \## Brainstorming Playground - Interview Preparation Edition 😄
 
+This project is NOT a revolutionary industrial vision framework. 
+It is simply a technical brainstorming playground I built while preparing for a job interview at NeuroCheck.
 
+Nothing overly ambitious.
 
-This project is NOT a revolutionary industrial vision framework. It
-
-is simply a technical brainstorming playground I built while preparing
-
-for a job interview at NeuroCheck.
-
-
-
-Nothing overly ambitious. No hidden AI breakthrough. No secret GPU
-
-cluster.
-
-
-
-Just structured thinking, architectural experiments, and hands‑on
-
-technical preparation.
-
+Just structured thinking, architectural experiments, and hands‑on technical preparation.
 
 
 ------------------------------------------------------------------------
 
 
-
 \## Purpose
-
 
 
 The goal of this project was to:
@@ -57,13 +39,18 @@ In short:
 > A focused technical rehearsal --- nothing more, nothing less.
 
 
-
-------------------------------------------------------------------------
-
-
-
 \## Architecture Used
 
+```mermaid
+graph TD
+    Camera[Laptop Kamera] --> CaptureThread
+    CaptureThread --> ProcessingThread
+    ProcessingThread --> OpenCV
+    ProcessingThread --> CInterface
+    CInterface --> WPFClient
+    CInterface --> WebAPI
+    WebAPI --> OPCUA
+```
 
 
 Laptop Camera\\
