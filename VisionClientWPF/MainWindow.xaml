@@ -1,12 +1,32 @@
 ﻿<Window x:Class="VisionClientWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VisionClientWPF"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="NeuroC Vision"
+        Height="250"
+        Width="400">
 
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
+            <TextBlock Text="Detection Result"
+                       FontSize="18"
+                       Margin="0,0,0,10"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock x:Name="PositionText"
+                       FontSize="16"
+                       HorizontalAlignment="Center"/>
+
+            <Button Content="Start"
+                    Width="120"
+                    Margin="0,10,0,0"
+                    Click="Start_Click"/>
+
+            <Button Content="Stop"
+                    Width="120"
+                    Margin="0,5,0,0"
+                    Click="Stop_Click"/>
+
+        </StackPanel>
     </Grid>
 </Window>
