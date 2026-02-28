@@ -25,7 +25,7 @@ namespace VisionClientWPF
             _timer.Interval = TimeSpan.FromMilliseconds(33); // ~30 FPS
             _timer.Tick += Timer_Tick;
         }
-                
+
         // ===== Steuerung =====
 
         private void Start_Click(object sender, RoutedEventArgs e)

@@ -4,6 +4,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="NeuroC_ComVision/NeuroC_ComVision.vcxproj" />
+  <Project Path="NeuroC_ComVision/NeuroC_ComVision.vcxproj" Id="726999f1-5d5c-492c-a1cf-88094fbe4def" />
   <Project Path="VisionClientWPF/VisionClientWPF.csproj" />
 </Solution>
