@@ -14,13 +14,14 @@ namespace VisionClientWPF
             public bool detected;
         }
 
-        [DllImport("NeuroC_ComVision.dll", CallingConvention = CallingConvention.Cdecl)]
+
+        [DllImport("NeuroCComVision.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool StartCamera();
 
-        [DllImport("NeuroC_ComVision.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("NeuroCComVision.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool GetFrame(out DetectionResult result);
 
-        [DllImport("NeuroC_ComVision.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("NeuroCComVision.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void StopCamera();
     }
 }
