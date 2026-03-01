@@ -11,4 +11,6 @@
   <Project Path="NeuroC_ComVision/NeuroC_ComVision.vcxproj" Id="726999f1-5d5c-492c-a1cf-88094fbe4def" />
   <Project Path="REST_API_NeuroC_Prep/REST_API_NeuroC_Prep.csproj" Id="0900e88b-1ad7-46ae-8957-2457b95f7316" />
   <Project Path="VisionClientWPF/VisionClientWPF.csproj" />
+  <Project Path="VisionOpcUaClient/VisionOpcUaClient.csproj" Id="86b0c1a1-98c7-403d-8693-4235ae75d3dd" />
+  <Project Path="VisionOpcUaServer/VisionOpcUaServer.csproj" Id="55a88b02-d042-4ffd-a425-f9b4f064f55e" />
 </Solution>
