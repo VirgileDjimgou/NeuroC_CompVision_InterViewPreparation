@@ -1,71 +1,55 @@
-\# NeuroC\_ComVision
+# VisionBridge
 
-\## Brainstorming Playground - Interview Preparation Edition 😄
+**Native C++ / OpenCV vision engine bridged to C# via P/Invoke**
 
-This project is NOT a revolutionary industrial vision framework. 
-It is simply a technical brainstorming playground I built while preparing for a job interview at NeuroCheck.
+---
 
-Nothing overly ambitious.
+This project is part of a series of small, focused technical playgrounds I maintain as a personal portfolio.
+No grand ambitions here — just a concrete excuse to get my hands dirty with native/managed interop,
+real-time image processing, and the kind of layered architecture you typically find in industrial vision software.
 
-Just structured thinking, architectural experiments, and hands‑on technical preparation.
-
-
-------------------------------------------------------------------------
-
-
-\## Purpose
+I originally started it while preparing for a technical interview at NeuroCheck (industrial image processing, Stuttgart).
+It kept growing a bit after that because the problem space is genuinely interesting to work with.
 
 
-The goal of this project was to:
+## What this project is about
+
+The core idea is simple: build a **C++ DLL** that captures frames from a laptop camera, runs various OpenCV-based
+detection algorithms on them, and exposes everything through a clean **C-compatible export interface**.
+Then consume that DLL from two independent C# clients — a **WPF desktop app** and an **ASP.NET Core REST API** —
+both talking to the native layer through P/Invoke.
+
+It simulates, on a small scale, the kind of architecture you would encounter in industrial vision systems:
+a fast native processing core with managed consumers on top.
 
 
-
-\-   Practice C++ / OpenCV integration
-
-\-   Design a clean DLL export interface
-
-\-   Connect native C++ code with a C# WPF application
-
-\-   Simulate a typical industrial vision software architecture
-
-\-   Refresh multithreading and interop concepts before an interview
-
-
-
-In short:
-
-
-
-> A focused technical rehearsal --- nothing more, nothing less.
-
-
-\## Architecture
+## Architecture
 
 ```mermaid
 graph TD
-    CAM["📷 Laptop Camera"]
+    CAM["Laptop Camera"]
 
-    subgraph DLL ["NeuroC_ComVision · C++ DLL"]
+    subgraph DLL ["NeuroC_ComVision  —  C++ DLL"]
         direction TB
-        CAPTURE["Capture Thread<br/><i>std::thread · std::mutex</i>"]
-        OPENCV["OpenCV 4.x Engine"]
-        DETECT["Detection Modes<br/>Color · Face · Edge · Circle"]
-        CAPI["C Export Interface<br/><code>StartCamera · GetFrame<br/>DetectFaces · DetectEdges</code>"]
+        CAPTURE["Capture Thread\nstd::thread / std::mutex"]
+        OPENCV["OpenCV 4.x"]
+        DETECT["Detection Modes\nColor · Face · Edge · Circle"]
+        CAPI["C Export Interface\nStartCamera / GetFrame\nDetectFaces / DetectEdges"]
         CAPTURE --> OPENCV --> DETECT --> CAPI
     end
 
-    subgraph WPF ["VisionClientWPF · C# WPF"]
+    subgraph WPF ["VisionClientWPF  —  C# / WPF"]
         direction TB
-        INTEROP_WPF["P/Invoke<br/><i>VisionInterop.cs</i>"]
-        UI["Live UI<br/>Video · Overlay · Controls"]
+        INTEROP_WPF["P/Invoke\nVisionInterop.cs"]
+        UI["Live UI\nVideo + Overlay + Controls"]
         INTEROP_WPF --> UI
     end
 
-    subgraph API ["REST API · ASP.NET Core 8"]
+    subgraph API ["REST API  —  ASP.NET Core 8"]
         direction TB
-        INTEROP_API["P/Invoke<br/><i>NativeInterop.cs</i>"]
-        SVC["VisionService<br/><i>Singleton</i>"]
-        CTRL["REST Controllers<br/><code>/api/camera<br/>/api/detection<br/>/api/frame</code>"]
+        INTEROP_API["P/Invoke\nNativeInterop.cs"]
+        SVC["VisionService\nSingleton"]
+        CTRL["Controllers\n/api/camera\n/api/detection\n/api/frame"]
         SWAGGER["Swagger UI"]
         INTEROP_API --> SVC --> CTRL
         CTRL -.- SWAGGER
@@ -75,151 +59,102 @@ graph TD
     CAPI -- "P/Invoke" --> INTEROP_WPF
     CAPI -- "P/Invoke" --> INTEROP_API
 
-    style CAM fill:#4a90d9,stroke:#2c5f8a,color:#fff
     style DLL fill:#2d2d3d,stroke:#6c5ce7,color:#fff
     style WPF fill:#2d3d2d,stroke:#27ae60,color:#fff
     style API fill:#3d2d2d,stroke:#e74c3c,color:#fff
-    style CAPTURE fill:#3a3a5a,stroke:#a29bfe,color:#fff
-    style OPENCV fill:#3a3a5a,stroke:#a29bfe,color:#fff
-    style DETECT fill:#3a3a5a,stroke:#a29bfe,color:#fff
-    style CAPI fill:#4a3a6a,stroke:#d4a5ff,color:#fff
-    style INTEROP_WPF fill:#3a5a3a,stroke:#6fcf97,color:#fff
-    style UI fill:#3a5a3a,stroke:#6fcf97,color:#fff
-    style INTEROP_API fill:#5a3a3a,stroke:#ff7675,color:#fff
-    style SVC fill:#5a3a3a,stroke:#ff7675,color:#fff
-    style CTRL fill:#5a3a3a,stroke:#ff7675,color:#fff
-    style SWAGGER fill:#5a4a3a,stroke:#fdcb6e,color:#fff
 ```
 
 
+## Tech stack
 
-------------------------------------------------------------------------
+| Layer | Technologies |
+|-------|-------------|
+| **Vision engine** | C++17, OpenCV 4.x, Windows DLL (`__declspec(dllexport)`), `std::thread`, `std::mutex` |
+| **Desktop client** | C# / .NET 8, WPF, P/Invoke, `DispatcherTimer` for ~30 FPS rendering |
+| **Web API** | ASP.NET Core 8, Swagger/OpenAPI, Singleton service wrapping native calls |
+| **Interop** | `extern "C"` exports, `DllImport` with `CallingConvention.Cdecl`, manual struct marshalling |
 
 
+## What has been implemented
 
-\## Technologies
+### C++ DLL (`NeuroC_ComVision`)
 
+- Camera capture running on a dedicated background thread with mutex-protected frame access
+- **Color detection** — HSV filtering to isolate red objects, contour extraction, bounding box
+- **Face detection** — Haar cascade (`haarcascade_frontalface_default.xml`), up to 32 simultaneous detections
+- **Edge detection** — Canny algorithm with Gaussian pre-filtering, single-channel grayscale output
+- **Circle detection** — Hough transform, results returned as bounding boxes
+- Raw frame access (BGR native + RGB converted) with stride-aware metadata
 
+### WPF Client (`VisionClientWPF`)
 
-\-   C++17
+- Live camera feed rendered as `BitmapSource` (RGB24) at ~30 FPS
+- Mode selector (Color / Face / Edge / Circle) with switchable overlay rendering
+- Bounding box and ellipse overlays drawn on a `Canvas` layer, scaled to the video feed
+- FPS counter, status display, start/stop controls
 
-\-   OpenCV 4.x
+### REST API (`REST_API_NeuroC_Prep`)
 
-\-   Windows DLL (native exports)
+- `CameraController` — start, stop, status, cascade loading
+- `DetectionController` — color, face, circle, edge detection endpoints returning JSON
+- `FrameController` — frame metadata, Base64-encoded RGB data, BMP image download
+- `VisionService` — thread-safe singleton wrapping all native interop
+- Swagger UI for quick manual testing
 
-\-   Multithreading (std::thread, std::mutex)
 
-\-   C# (.NET)
+## Project structure
 
-\-   WPF
+```
+NeuroC_ComVision/
+├── NeuroC_ComVision/          # C++ DLL — OpenCV processing engine
+│   ├── NeuroC_ComVision.h     # Exported C interface (structs + functions)
+│   └── NeuroC_ComVision.cpp   # Capture thread, detection algorithms
+│
+├── VisionClientWPF/           # C# WPF desktop client
+│   ├── VisionInterop.cs       # P/Invoke declarations
+│   ├── MainWindow.xaml        # UI layout (video + sidebar)
+│   └── MainWindow.xaml.cs     # Rendering loop, detection dispatch, overlays
+│
+├── REST_API_NeuroC_Prep/      # ASP.NET Core 8 Web API
+│   ├── Interop/NativeInterop.cs
+│   ├── Services/VisionService.cs
+│   ├── Controllers/           # Camera, Detection, Frame
+│   └── Models/VisionDtos.cs
+│
+└── README.md
+```
 
-\-   P/Invoke
 
+## Why it exists
 
+I find that the best way to stay sharp on fundamentals is to build small things end to end.
+Reading documentation about P/Invoke marshalling is one thing — actually debugging a struct layout
+mismatch between C++ and C# at runtime is another.
 
-------------------------------------------------------------------------
+This project let me revisit:
 
+- Native/managed memory boundaries and struct alignment
+- Thread safety across a DLL boundary
+- Real-time frame rendering in WPF without drowning the UI thread
+- Designing a REST layer on top of hardware-bound resources (one camera = one singleton)
+- Keeping a clean separation between interop plumbing and application logic
 
+Nothing revolutionary. Just practice that sticks.
 
-\##  What It Does
 
+## Disclaimer
 
+This is a portfolio exercise, not a production system.
+The code is intentionally kept straightforward — no over-engineering, no abstraction for abstraction's sake.
+If you are looking for an industrial-grade vision framework, this is not it.
 
-\-   Captures frames from the laptop camera
 
-\-   Detects a red object using HSV filtering
+## Author
 
-\-   Computes a bounding box
+**Patrick Djimgou** — Germany
 
-\-   Displays X/Y coordinates in a WPF interface
-
-
-
-That's it.
-
-
-
-No machine learning. No deep learning. No enterprise scalability layer.
-
-Just clean fundamentals.
-
-
-
-------------------------------------------------------------------------
-
-
-
-\## Why It Exists
-
-
-
-Interview preparation should be practical.
-
-
-
-Instead of only reviewing theory, I prefer to:
-
-
-
-\-   Implement small, focused prototypes
-
-\-   Revisit core architectural principles
-
-\-   Validate cross-language integration
-
-\-   Think through real-world design patterns
-
-
-
-This repository reflects that mindset.
-
-
-
-------------------------------------------------------------------------
-
-
-
-\## ⚠ Disclaimer
-
-
-
-This project is intentionally simple.
-
-
-
-It is a preparation exercise, not a production system. Please do not
-
-benchmark it against industrial-grade vision platforms 🙂
-
-
-
-------------------------------------------------------------------------
-
-
-
-\## 👤 Author
-
-
-
-Patrick Djimgou\\
-
-Germany\\
-
-Interview preparation session -- NeuroCheck
-
-
-
-------------------------------------------------------------------------
-
-
-
-If you are reading this and expected something world-changing:
-
-
-
-Sorry 😄\\
-
-But fundamentals always win.
+Part of a personal technical portfolio.
+Built during interview preparation for NeuroCheck, kept around because fundamentals always age well.
 
 
 
