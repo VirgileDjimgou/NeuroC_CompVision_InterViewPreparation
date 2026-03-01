@@ -1,11 +1,9 @@
 # VisionBridge
 
-**Native C++ / OpenCV vision engine bridged to C# via P/Invoke**
-
----
+Native C++ / OpenCV vision engine bridged to C# via P/Invoke**
 
 This project is part of a series of small, focused technical playgrounds I maintain as a personal portfolio.
-No grand ambitions here — just a concrete excuse to get my hands dirty with native/managed interop,
+No grand ambitions here... :) just a concrete excuse to get my hands dirty with native/managed interop,
 real-time image processing, and the kind of layered architecture you typically find in industrial vision software.
 
 I originally started it while preparing for a technical interview at NeuroCheck (industrial image processing, Stuttgart).
@@ -14,9 +12,9 @@ It kept growing a bit after that because the problem space is genuinely interest
 
 ## What this project is about
 
-The core idea is simple: build a **C++ DLL** that captures frames from a laptop camera, runs various OpenCV-based
-detection algorithms on them, and exposes everything through a clean **C-compatible export interface**.
-Then consume that DLL from two independent C# clients — a **WPF desktop app** and an **ASP.NET Core REST API** —
+The core idea is simple: build a C++ DLL that captures frames from a laptop camera, runs various OpenCV-based
+detection algorithms on them, and exposes everything through a clean C-compatible export interface.
+Then consume that DLL from two independent C# clients, a WPF desktop app** and an ASP.NET Core REST API —
 both talking to the native layer through P/Invoke.
 
 It simulates, on a small scale, the kind of architecture you would encounter in industrial vision systems:
@@ -128,7 +126,7 @@ NeuroC_ComVision/
 ## Why it exists
 
 I find that the best way to stay sharp on fundamentals is to build small things end to end.
-Reading documentation about P/Invoke marshalling is one thing — actually debugging a struct layout
+Reading documentation about P/Invoke marshalling is one thing , actually debugging a struct layout
 mismatch between C++ and C# at runtime is another.
 
 This project let me revisit:
@@ -151,10 +149,9 @@ If you are looking for an industrial-grade vision framework, this is not it.
 
 ## Author
 
-**Patrick Djimgou** — Germany
+Patrick Djimgou
 
 Part of a personal technical portfolio.
-Built during interview preparation for NeuroCheck, kept around because fundamentals always age well.
 
 
 
