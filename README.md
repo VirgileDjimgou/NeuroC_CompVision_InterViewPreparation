@@ -11,6 +11,14 @@ and exports everything through a flat C interface. Then on the C# side I have mu
 to this DLL through different channels. It simulates, on a small scale, the architecture you'd find
 in real industrial vision systems: fast native core, managed layer on top, multiple protocols.
 
+## Screenshots
+
+The unified WPF client running in bottle inspection mode, connected to the Runtime over REST:
+
+![VisionBridge unified client screenshot 1](Assets/Screenshot%202026-03-16%20220225.png)
+
+![VisionBridge unified client screenshot 2](Assets/Screenshot%202026-03-16%20220448.png)
+
 
 ## What it does
 
